@@ -4,56 +4,71 @@ import java.awt.*;
 import javax.swing.*;
 
 public class App {
+    private static final JTextField[][] cells = new JTextField[9][9];
     public static void main(String[] args) {
+        JFrame frame = new JFrame("Sudoku");
+        JPanel panel = new JPanel(new GridLayout(9,9,2,2));        
 
-        JFrame frame = new JFrame("Mini Sudoku 3x3");
-        JPanel panel = new JPanel(new GridLayout(3,3,5,5));
-        
-        JTextField[] cells = new JTextField[9];
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                cells[row][col] = new JTextField();
+                JTextField field = cells[row][col];
+                field.setHorizontalAlignment(JTextField.CENTER);
 
-        for (int i = 0; i < 9; i++) {
-            cells[i] = new JTextField();
+                final int currentRow = row;
+                final int currentCol = col;
 
-            // Validação
-            cells[i].setInputVerifier(new InputVerifier() {
-                @Override
-                public boolean verify(JComponent input) {
-                    JTextField field = (JTextField) input;
-                    String text = field.getText();
+                field.setInputVerifier(new InputVerifier() {
+                    @Override
+                    public boolean verify(JComponent input) {
+                        String text = field.getText();
 
-                    try {
-                        int value = Integer.parseInt(text);
+                        if (text.isEmpty()) return true;
 
-                        // validar números
-                        if (value < 1 || value > 9) {
-                            JOptionPane.showMessageDialog(frame, "Digite apenas números de 1 a 9!");
-                            field.setText("");
-                            return false;
-                        }
-                        // validar números repetidos
-                        for (JTextField other : cells) {
-                            if (other != field && text.equals(other.getText())) {
-                                JOptionPane.showMessageDialog(frame, "Número já usado!");
+                        try {
+                            int value = Integer.parseInt(text);
+
+                            // Aceita somente numeros entre 1 e 9
+                            if (value < 1 || value > 9) {
+                                JOptionPane.showMessageDialog(frame, "Digite apenas números de 1 a 9!");
                                 field.setText("");
                                 return false;
                             }
+
+                            // Verificar duplicado na mesma linha
+                            for (int c = 0; c < 9; c++) {
+                                if (c != currentCol && text.equals(cells[currentRow][c].getText())) {
+                                    JOptionPane.showMessageDialog(frame, "Número já existe nesta linha!");
+                                    field.setText("");
+                                    return false;
+                                }
+                            }
+
+                            // Verificar duplicado na mesma coluna
+                            for (int r = 0; r < 9; r++) {
+                                if (r != currentRow && text.equals(cells[r][currentCol].getText())) {
+                                    JOptionPane.showMessageDialog(frame, "Número já existe nesta coluna!");
+                                    field.setText("");
+                                    return false;                                
+                                }
+                            }
+
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(frame, "Digite apenas números!");
+                            field.setText("");
+                            return false;
                         }
 
-
-                    } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(frame, "Digite apenas números!");
-                        field.setText("");
-                        return false;
+                        return true;
                     }
-                    return true;
-                }
-            });
+                });
 
-            panel.add(cells[i]);            
+                panel.add(field);
+            }
         }
 
         frame.add(panel);
-        frame.setSize(400, 400);
+        frame.setSize(600, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
