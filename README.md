@@ -1,4 +1,8 @@
 # Sudoku 9x9 - Java Swing GUI
+![Java](https://img.shields.io/badge/Java-21-orange?Logo=java&logoColor=white)
+![Swing](https://img.shields.io/badge/Swing-GUI-blue)
+
+---
 
 ![Sudoku Screenshot](screenshot.png)
 
@@ -24,3 +28,7 @@ Interactive 9x9 Sudoku game developed in Java with Swing. Features:
 ## Notes
 - Hints are limited to 3 uses
 - Solve button temporarily shows the solution
+
+## About
+This project is a fully interactive 9x9 Sudoku game developed entirely by me (Michael Dev).
+It demonstrates skills in Java Swing GUI, input validation, and game logic.
