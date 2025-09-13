@@ -2,22 +2,10 @@ package src.main.java.dev.michael.sudoku;
 
 import java.awt.*;
 import javax.swing.*;
+import src.main.java.dev.michael.sudoku.model.Board;
 
 public class App {
     private static final JTextField[][] cells = new JTextField[9][9];
-
-    // tabuleiro inicial (0 = vazio)
-    private static final int[][] initialBoard = {
-        {5, 3, 0, 0, 7, 0, 0, 0, 0},
-        {6, 0, 0, 1, 9, 5, 0, 0, 0},
-        {0, 9, 8, 0, 0, 0, 0, 6, 0},
-        {8, 0, 0, 0, 6, 0, 0, 0, 3},
-        {4, 0, 0, 8, 0, 3, 0, 0, 1},
-        {7, 0, 0, 0, 2, 0, 0, 0, 6},
-        {0, 6, 0, 0, 0, 0, 2, 8, 0},
-        {0, 0, 0, 4, 1, 9, 0, 0, 5},
-        {0, 0, 0, 0, 8, 0, 0, 7, 9}
-    };
 
     private static boolean checkWin() {
         // Verifica linhas
@@ -46,17 +34,41 @@ public class App {
     }
 
     public static void main(String[] args) {
+        Board board = new Board();
+        int[][] initialBoard = board.getBoard();
+        
         JFrame frame = new JFrame("Sudoku");
         JPanel panel = new JPanel(new GridLayout(9,9,2,2)); 
         
         JButton newGameButton = new JButton("Novo Jogo");
+        newGameButton.addActionListener(e -> {
+            board.gerarNovoJogo();
+            int[][] novoTabuleiro = board.getBoard();
+
+            for (int row = 0; row < 9; row++) {
+                for (int col = 0; col < 9; col++) {
+                    JTextField field = cells[row][col];
+                    int value = novoTabuleiro[row][col];
+
+                    if (value != 0) {
+                        field.setText(String.valueOf(value));
+                        field.setEditable(false);
+                        field.setBackground(Color.LIGHT_GRAY);
+                    } else {
+                        field.setText("");
+                        field.setEditable(true);
+                        field.setBackground(Color.WHITE);
+                    }
+                }
+            }
+        });
         JButton hintButton = new JButton("Dica (3x)");
-        JButton solveButton = new JButton("Resolver");
+        JButton clearButton = new JButton("Limpar");
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(newGameButton);
         buttonPanel.add(hintButton);
-        buttonPanel.add(solveButton);
+        buttonPanel.add(clearButton);
 
         frame.add(buttonPanel, BorderLayout.SOUTH);
 
